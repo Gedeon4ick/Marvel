@@ -17,7 +17,7 @@ class MarvelService {
     }
     // методы которые будут делать запросы
     getAllCharacters =  async () => {
-        const res = await this.getResource(`${this._apiBase}characters?limit=96offset=210&${this._apiKey}`);
+        const res = await this.getResource(`${this._apiBase}characters?limit=9offset=210&${this._apiKey}`);
         return res.data.results.map(this._transformCharacter)
     }
     // получение только одного персонажа
@@ -29,6 +29,7 @@ class MarvelService {
     // метод трансформации данных в нужный нам формат
     _transformCharacter = (char) => {
           return {
+            id: char.id,
             name: char.name,
             description: char.description,
             thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
