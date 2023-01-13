@@ -8,24 +8,49 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 class CharList  extends Component {
     
     state = {
-        char: {},
+        charList: [],
         loading: true,
-        error: false
+        error: false,
+        newItemLoading: false,
+        offset: 210
     }
 
     marvelService = new MarvelService();
 
     componentDidMount() {
-        this.updataChar();
+        this.onRequest();
         // this.timerId = setInterval(this.updataChar, 3000)
+    }
+
+    onRequest = (offset) => {
+        this.onCharListLoading();
+        this.marvelService.getAllCharacters(offset)
+        .then(this.onCharListLoaded)
+        .catch(this.onError);
+    } 
+
+    onCharListLoading = () => {
+        this.setState({
+            newItemLoading: true
+        })
+    }
+
+    onCharListLoaded = (newCharList) => {
+        this.setState(({offset, charList}) => ({
+            charList: [...charList, ...newCharList],
+            loading: false,
+            newItemLoading: false,
+            offset: offset + 9
+        }))
     }
 
     componentWillUnmount() {
         clearInterval(this.timerId);
     }
 
-    onChatLoaded = (char) => {
-        this.setState({char, loading: false})
+    onChatLoaded = (charList) => {
+        this.setState({charList, loading: false})
+        
     }
 
     onError = () => {
@@ -44,10 +69,10 @@ class CharList  extends Component {
     }
 
     render () {
-        const {char, loading, error} = this.state;
+        const {charList, loading, error, offset, newItemLoading} = this.state;
         const errorMessage = error ? <ErrorMessage/> : null;
         const spiner = loading ? <Spinner/> : null;
-        const content = !(loading || error) && char ? char.map((element) => {
+        const content = !(loading || error) && charList ? charList.map((element) => {
             return (
                     <li 
                         key={element.id}
@@ -58,7 +83,6 @@ class CharList  extends Component {
                     </li>
             )
         }) : null;
-        console.log(char); 
 
 
         return (
@@ -69,7 +93,10 @@ class CharList  extends Component {
                 <ul className="char__grid">
                     {content}
                 </ul>
-                <button className="button button__main button__long">
+                <button 
+                    className="button button__main button__long"
+                    disabled={newItemLoading}
+                    onClick={() => {this.onRequest(offset)}}>
                     <div className="inner">load more</div>
                 </button>
             </div>
