@@ -49,9 +49,12 @@ class CharList  extends Component {
         const spiner = loading ? <Spinner/> : null;
         const content = !(loading || error) && char ? char.map((element) => {
             return (
-                    <li key={element.id} className="char__item">
-                        <img src={element.thumbnail} alt="abyss"/>
-                        <div className="char__name">{element.name}</div>
+                    <li 
+                        key={element.id}
+                        className="char__item"
+                        onClick={() => this.props.onCharSelected(element.id)}>
+                            <img src={element.thumbnail} alt="abyss" className={element.thumbnail == null ? null : "active"}/>
+                            <div className="char__name">{element.name}</div>
                     </li>
             )
         }) : null;

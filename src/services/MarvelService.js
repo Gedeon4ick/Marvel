@@ -34,7 +34,8 @@ class MarvelService {
             description: char.description,
             thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
             homepage: char.urls[0].url,
-            wiki: char.urls[0].url
+            wiki: char.urls[0].url,
+            comics: char.comics.items
           }
     }
 }
