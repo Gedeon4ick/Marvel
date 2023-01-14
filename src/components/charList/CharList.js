@@ -83,9 +83,11 @@ class CharList  extends Component {
         const content = !(loading || error) && charList ? charList.map((element) => {
             return (
                     <li 
+                        tabIndex={0}
+                        onFocus={() => this.props.onCharSelected(element.id)}
                         key={element.id}
-                        className="char__item"
-                        onClick={() => this.props.onCharSelected(element.id)}>
+                        onClick={() => this.props.onCharSelected(element.id)}
+                        className={this.props.selectedChar ? this.props.selectedChar == element.id ? "char__item active" : "char__item" : "char__item"}>
                             <img src={element.thumbnail} alt="abyss" className={element.thumbnail == null ? null : "active"}/>
                             <div className="char__name">{element.name}</div>
                     </li>
