@@ -1,4 +1,5 @@
 import { Component } from 'react/cjs/react.development';
+import PropTypes from 'prop-types';
 import './charInfo.scss';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -35,8 +36,6 @@ class CharInfo extends Component{
         .getCharacter(charId)
         .then(this.onChatLoaded)
         .catch(this.onError)
-
-        this.foo.bar = 0;
     }
 
     
@@ -118,6 +117,11 @@ const View = ({char}) => {
     </>
     )
     
+}
+
+
+CharInfo.propTypes = {
+    charId: PropTypes.number
 }
 
 export default CharInfo;
