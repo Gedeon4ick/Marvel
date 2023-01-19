@@ -1,35 +1,30 @@
 import './charList.scss';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
 const CharList = ({onCharSelected, selectedChar}) => {
     const [charList, setCharList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [offset, setOffset] = useState(210);
     const [charEnded, setCharEnded] = useState(false);
 
-    const marvelService = new MarvelService();
+    const {loading, error, getAllCharacters}= useMarvelService();
 
     useEffect(()=> {
-        onRequest();
+        onRequest(offset, true);
     }, [])
   
 
-    const onRequest = (offset) => {
-        onCharListLoading();
-        marvelService.getAllCharacters(offset)
+    const onRequest = (offset, initial) => {
+        initial ? setNewItemLoading(false) :
+        setNewItemLoading(true);
+        getAllCharacters(offset)
         .then(onCharListLoaded)
-        .catch(onError);
     } 
 
-    const onCharListLoading = () => {
-        setNewItemLoading(true);
-    }
 
     const onCharListLoaded = (newCharList) => {
         let ended = false;
@@ -38,35 +33,15 @@ const CharList = ({onCharSelected, selectedChar}) => {
         }
 
         setCharList(charList => [...charList, ...newCharList]);
-        setLoading(loading => false);
         setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
         setCharEnded(charEnded => ended);
 
     }
 
-    const onChatLoaded = (charList) => {
-        setCharList(charList);
-        setLoading(false);
-        
-    }
-
-    const onError = () => {
-        setLoading(false);
-        setError(true)
-    }
-
-    // const updataChar = () => {
-    //     // const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-    //     marvelService
-    //         .getAllCharacters()
-    //         .then(onChatLoaded)
-    //         .catch(onError);
-    // }
-
     const errorMessage = error ? <ErrorMessage/> : null;
-    const spiner = loading ? <Spinner/> : null;
-    const content = !(loading || error) && charList ? charList.map((element) => {
+    const spiner = loading && !newItemLoading ? <Spinner/> : null;
+    const content = charList.map((element) => {
         return (
                 <li 
                     tabIndex={0}
@@ -78,7 +53,7 @@ const CharList = ({onCharSelected, selectedChar}) => {
                         <div className="char__name">{element.name}</div>
                 </li>
         )
-    }) : null;
+    });
 
 
     return (
