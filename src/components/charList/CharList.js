@@ -16,13 +16,17 @@ const CharList = ({onCharSelected, selectedChar}) => {
     useEffect(()=> {
         onRequest(offset, true);
     }, [])
-  
+
 
     const onRequest = (offset, initial) => {
+        // if (initial) {
+        //     getAllCharacters(offset)
+        //     .then(onCharListLoaded)
+        // }
         initial ? setNewItemLoading(false) :
         setNewItemLoading(true);
         getAllCharacters(offset)
-        .then(onCharListLoaded)
+        .then(result => onCharListLoaded(result))
     } 
 
 
@@ -36,7 +40,6 @@ const CharList = ({onCharSelected, selectedChar}) => {
         setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
         setCharEnded(charEnded => ended);
-
     }
 
     const errorMessage = error ? <ErrorMessage/> : null;
@@ -68,7 +71,8 @@ const CharList = ({onCharSelected, selectedChar}) => {
                 className="button button__main button__long"
                 disabled={newItemLoading}
                 style={{"display": charEnded ? "none" : "block "}}
-                onClick={() => {onRequest(offset)}}>
+                onClick={() => {onRequest(offset)}}
+                >
                 <div className="inner">load more</div>
             </button>
         </div>
