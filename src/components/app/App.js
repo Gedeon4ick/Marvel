@@ -1,12 +1,12 @@
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import AppHeader from "../appHeader/AppHeader";
 import {ComicsPage, MainPage, Page404, SingleComicPage} from "../pages";
 
 const App = () => {
     
     return (
-        <Router>
+        <HashRouter>
             <div className="app">
                 <AppHeader/>
                 <main>
@@ -18,7 +18,7 @@ const App = () => {
                     </Routes>
                 </main>
             </div>
-        </Router>
+        </HashRouter>
         
     )
 }
